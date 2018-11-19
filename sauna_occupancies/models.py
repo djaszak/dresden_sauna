@@ -12,9 +12,6 @@ class Occupancy(models.Model):
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(blank=True,
                                null=True)
-    user = models.ForeignKey(User,
-                             verbose_name='User',
-                             on_delete=models.PROTECT,
-                             blank=True,
-                             null=True)
-
+    user = models.ManyToManyField(User,
+                                  verbose_name='User',
+                                  blank=True)

@@ -8,8 +8,8 @@ class OccupancyForm(ModelForm):
     class Meta:
         model = Occupancy
         exclude = ['user', ]
-        widgets = {
-            'start': SplitDateTimeWidget(date_attrs={'type': 'date'},
-                                         time_attrs={'type': 'time'}, ),
-            'end': SplitDateTimeWidget,
-        }
+        # widgets = {
+        #     'start': SplitDateTimeWidget(date_attrs={'type': 'date'},
+        #                                  time_attrs={'type': 'time'}, ),
+        #     'end': SplitDateTimeWidget,
+        # }

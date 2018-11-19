@@ -2,10 +2,8 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from django.shortcuts import redirect
 from django.shortcuts import HttpResponse
 
-from .models import Occupancy
 from .forms import OccupancyForm
 
 
@@ -19,6 +17,9 @@ def create_occupancy(request):
     if request.method == 'POST':
         form = OccupancyForm(request.POST)
         if form.is_valid():
+            occupancy = form.save()
+            occupancy.user.add(request.user)
+            occupancy.save()
             render(request, 'create_occupancy.html', {'form': form})
 
     else:
