@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import datetime
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -15,6 +13,7 @@ class Occupancy(models.Model):
     user = models.ManyToManyField(User,
                                   verbose_name='User',
                                   blank=True)
+    notes = models.TextField(blank=True)
 
     def __str__(self):
         return 'Diese Belegung startet: ' + str(self.start)

@@ -1,5 +1,18 @@
 <form method="post" novalidate>
   {% csrf_token %}
+  <table border="1">
     {{ form }}
+  </table>
   <button type="submit">Submit</button>
 </form>
+<p>
+    Das sind die aktuellen Nutzer welche dann saunieren:
+    <ul>
+        {% for user in occupancy.user.all %}
+            <li>{{ user }}</li>
+        {% endfor %}
+    </ul>
+</p>
+<p>
+    <a href={% url 'add_user_to_occupancy' occupancy.id %}>Saunier doch dann mit!</a>
+</p>

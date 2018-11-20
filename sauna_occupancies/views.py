@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib import messages
 from django.shortcuts import render
 from django.shortcuts import redirect
 
@@ -34,8 +35,21 @@ def change_occupancy(request, occupancy_id):
     if request.method == 'POST':
         form = OccupancyForm(request.POST, instance=occupancy)
         if form.is_valid():
-            return redirect(change_occupancy(request, occupancy_id))
+            return render(request, 'change_occupancy.html', {'form': form, 'occupancy': occupancy})
     else:
         form = OccupancyForm(instance=occupancy)
 
     return render(request, 'change_occupancy.html', {'form': form, 'occupancy': occupancy})
+
+
+def add_user_to_occupancy(request, occupancy_id):
+    occupancy = Occupancy.objects.get(pk=occupancy_id)
+    user = request.user
+    if occupancy.user.filter(id=user.id).exists():
+        messages.error(request, 'Du bist schon in dieser Belegung, reicht dann auch!')
+        return redirect(change_occupancy, occupancy_id=occupancy.id)
+    else:
+        occupancy.user.add(user)
+        occupancy.save()
+        messages.success(request, 'Nice, du saunierst dann auch mit')
+        return redirect(change_occupancy, occupancy_id=occupancy.id)
