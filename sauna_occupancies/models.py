@@ -15,3 +15,6 @@ class Occupancy(models.Model):
     user = models.ManyToManyField(User,
                                   verbose_name='User',
                                   blank=True)
+
+    def __str__(self):
+        return 'Diese Belegung startet: ' + str(self.start)
