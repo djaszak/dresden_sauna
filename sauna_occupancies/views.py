@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -9,12 +10,14 @@ from .forms import OccupancyForm
 from .models import Occupancy
 
 
+@login_required
 def index(request):
     occupancies = Occupancy.objects.all()[:5]
 
     return render(request, 'index.html', {'occupancies': occupancies})
 
 
+@login_required
 def create_occupancy(request):
     if request.method == 'POST':
         form = OccupancyForm(request.POST)
@@ -30,6 +33,7 @@ def create_occupancy(request):
     return render(request, 'create_occupancy.html', {'form': form})
 
 
+@login_required
 def change_occupancy(request, occupancy_id):
     occupancy = Occupancy.objects.get(pk=occupancy_id)
     if request.method == 'POST':
@@ -42,6 +46,7 @@ def change_occupancy(request, occupancy_id):
     return render(request, 'change_occupancy.html', {'form': form, 'occupancy': occupancy})
 
 
+@login_required
 def add_user_to_occupancy(request, occupancy_id):
     occupancy = Occupancy.objects.get(pk=occupancy_id)
     user = request.user
@@ -53,3 +58,4 @@ def add_user_to_occupancy(request, occupancy_id):
         occupancy.save()
         messages.success(request, 'Nice, du saunierst dann auch mit')
         return redirect(change_occupancy, occupancy_id=occupancy.id)
+

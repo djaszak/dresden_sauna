@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'sauna_occupancies/style.css' %}">
+    <meta charset="utf-8">
+    <title>{% block title %}Saunieren im Paradies{% endblock %}</title>
+</head>
+<body>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

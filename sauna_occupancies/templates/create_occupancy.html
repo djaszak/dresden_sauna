@@ -1,3 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script>
+$(document).ready(function() {
+    $('.datepicker').datepicker();
+});
+</script>
+
+
 <form method="post" novalidate>
   {% csrf_token %}
   <table border="1">
@@ -5,3 +17,4 @@
   </table>
   <button type="submit">Submit</button>
 </form>
+{% endblock %}

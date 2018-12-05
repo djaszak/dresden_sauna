@@ -1,3 +1,11 @@
-{% for occupancy in occupancies %}
-    {{ occupancy }} </br>
-{% endfor %}
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <ul>
+        {% for occupancy in occupancies %}
+            <li><a href="{% url 'change_occupancy' occupancy.id %}">{{ occupancy }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

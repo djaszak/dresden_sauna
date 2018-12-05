@@ -1,0 +1,13 @@
+li a {
+    color: black;
+}
+
+ul {
+    list-style-type: none
+}
+
+body {
+    background-color: rgb(211, 95, 95);
+    display: table;
+    margin:0 auto;
+}
