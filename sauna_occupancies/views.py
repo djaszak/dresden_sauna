@@ -10,14 +10,14 @@ from .forms import OccupancyForm
 from .models import Occupancy
 
 
-@login_required
+@login_required(login_url='/sauna_occupancies/login/')
 def index(request):
     occupancies = Occupancy.objects.all()[:5]
 
     return render(request, 'index.html', {'occupancies': occupancies})
 
 
-@login_required
+@login_required(login_url='/sauna_occupancies/login/')
 def create_occupancy(request):
     if request.method == 'POST':
         form = OccupancyForm(request.POST)
@@ -33,7 +33,7 @@ def create_occupancy(request):
     return render(request, 'create_occupancy.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/sauna_occupancies/login/')
 def change_occupancy(request, occupancy_id):
     occupancy = Occupancy.objects.get(pk=occupancy_id)
     if request.method == 'POST':
@@ -46,7 +46,7 @@ def change_occupancy(request, occupancy_id):
     return render(request, 'change_occupancy.html', {'form': form, 'occupancy': occupancy})
 
 
-@login_required
+@login_required(login_url='/sauna_occupancies/login/')
 def add_user_to_occupancy(request, occupancy_id):
     occupancy = Occupancy.objects.get(pk=occupancy_id)
     user = request.user
