@@ -5,12 +5,14 @@ from django.forms.widgets import TimeInput
 
 from .models import Occupancy
 
+
 class UltraDateInput(forms.DateInput):
     input_type = 'date'
     
 
-class UltraTimeInput(forms.TimeInput):
+class UltraTimeInput(TimeInput):
     input_type = 'time'
+
 
 class OccupancyForm(forms.ModelForm):
     occupancy_date = forms.DateField()
@@ -22,7 +24,7 @@ class OccupancyForm(forms.ModelForm):
         exclude = ['user', 'start', 'end']
         fields = ['occupancy_date', 'start_time', 'end_time', 'notes']
         widgets = {
-            'occupancy_date': UltraDateInput(),
+            'occupancy_date': forms.DateInput(attrs={'type': 'date'}),
             'start_time': UltraTimeInput(),
             'end_time': UltraTimeInput()
         }
