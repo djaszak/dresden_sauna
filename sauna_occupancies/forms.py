@@ -96,7 +96,6 @@ class OccupancyForm(forms.ModelForm):
                     'Du kannst das saunieren nicht beenden bevor du gestartet hast'
                 )
 
-
     def save(self, commit=True):
         model = super(OccupancyForm, self).save(commit=False)
         model.start = datetime.datetime.combine(self.cleaned_data['occupancy_date'], self.cleaned_data['start_time'])
