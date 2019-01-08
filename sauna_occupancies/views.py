@@ -7,7 +7,9 @@ import datetime
 import os
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 
@@ -64,22 +66,27 @@ def create_occupancy(request):
             # Now we will append a new row to the cronjob.csv
             with open(ccron, 'a') as csvFile:
                 writer = csv.writer(csvFile)
-                # [sec],[min],[hour],[day],*,[month],[year],1,[ID],[comment],0,24,1,*
                 heating_start = occupancy.start - SAUNA_HEATING_TIME
-                minute = heating_start.strftime('%M')
-                hour = heating_start.strftime('%H')
-                day = heating_start.strftime('%d')
-                month = heating_start.strftime('%m')
-                year = heating_start.strftime('%Y')
+                heating_minute = heating_start.strftime('%M')
+                heating_hour = heating_start.strftime('%H')
+                heating_day = heating_start.strftime('%d')
+                heating_month = heating_start.strftime('%m')
+                heating_year = heating_start.strftime('%Y')
+                # One time all variables for the heating and one time for the songs
+                minute = occupancy.start.strftime('%M')
+                hour = occupancy.start.strftime('%H')
+                day = occupancy.start.strftime('%d')
+                month = occupancy.start.strftime('%m')
+                year = occupancy.start.strftime('%Y')
                 comment = occupancy.user.all()[0].__str__()
                 writer.writerow([
                     '00',
-                    minute,
-                    hour,
-                    day,
+                    heating_minute,
+                    heating_hour,
+                    heating_day,
                     '*',
-                    month,
-                    year,
+                    heating_month,
+                    heating_year,
                     '1',
                     cronjob_id,
                     comment,
@@ -102,7 +109,7 @@ def create_occupancy(request):
                         cronjob_id,
                         'Song - ID {} wiedergeben'.format(song),
                         '6',
-                        'song',
+                        song,
                         '0',
                         '*'
                     ])
@@ -150,3 +157,22 @@ def occupancy_list(request, year, month, day):
     occupancies = Occupancy.objects.filter(start__year=year, start__month=month, start__day=day)
     return render(request, 'occupancy_list.html', {'occupancies': occupancies})
 
+
+def csv_download(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="ccron.csv"'
+    # Necessary to get the actual path to our CSV File
+    workpath = os.path.dirname(os.path.abspath(__file__))
+    ccron = os.path.join(workpath, 'ccron.csv')
+    with open(ccron, newline='') as CSVFile:
+        reader = list(csv.reader(CSVFile))
+        writer = csv.writer(response)
+        for row in reader:
+            writer.writerow(row)
+    return response
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')

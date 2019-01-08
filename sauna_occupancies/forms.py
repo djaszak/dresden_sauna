@@ -21,7 +21,7 @@ class UltraTimeInput(TimeInput):
 # https://stackoverflow.com/questions/10048249/how-do-i-determine-if-current-time-is-within-a-specified-range-using-pythons-da
 def is_time_in_time_period(start_time, end_time, check_time):
     if start_time < end_time:
-        return check_time >= start_time and check_time <= end_time
+        return not check_time < start_time and check_time <= end_time
     # Over midnight
     else:
         return check_time >= start_time or check_time <= end_time

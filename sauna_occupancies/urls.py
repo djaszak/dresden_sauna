@@ -10,4 +10,6 @@ urlpatterns = [
     path('occupancy/change/<int:occupancy_id>/add_user/', views.add_user_to_occupancy, name='add_user_to_occupancy'),
     path('occupancy/list/<int:year>/<int:month>/<int:day>/', views.occupancy_list, name='occupancy_list'),
     path('login/', auth_views.LoginView.as_view(redirect_field_name='index'), name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('csv-download/', views.csv_download, name='csv_download')
 ]

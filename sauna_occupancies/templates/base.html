@@ -7,6 +7,11 @@
     <title>{% block title %}Saunieren im Paradies{% endblock %}</title>
 </head>
 <body>
+    <ul class="topnav">
+      <li><a href="{% url 'index' %}">Belegungskalender</a></li>
+      <li><a href="{% url 'create_occupancy' %}">Erstelle eine Belegung</a></li>
+      <li class="right"><a href="{% url 'logout' %}">Logout</a></li>
+    </ul>
     <main>
         {% block content %}
         {% endblock %}

@@ -38,7 +38,7 @@ SONG_CHOICES = (
         (205, 'Kormac - Wash my Hands'),
         (206, 'Marek Hemmann - Joker'),
         (207, 'Marek Hemmann - You Know'),
-        (208, 'N&apos;to - 1825'),
+        (208, 'N\'to - 1825'),
         (209, 'Oliver Koletzki - Arrow & Bow'),
         (210, 'Paul Kalkbrenner - Sky and Sand'),
         (211, 'Rimini Sunset - Sunrise'),
