@@ -16,4 +16,6 @@ class Occupancy(models.Model):
     notes = models.TextField(blank=True)
 
     def __str__(self):
-        return 'Diese Belegung startet: ' + str(self.start.strftime('%A, %d. %m.'))
+        return 'Diese Belegung startet um {} Uhr und endet um {} Uhr.'.format(
+            self.start.strftime('%H:%M'),
+            self.end.strftime('%H:%M'))

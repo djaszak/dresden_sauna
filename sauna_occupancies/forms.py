@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 from django.contrib.admin import widgets
 from django.utils import timezone
@@ -32,19 +34,21 @@ class OccupancyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(OccupancyForm, self).__init__(*args, **kwargs)
 
-        # if kwargs['instance']:
-        #     self.fields['occupancy_date'].initial = kwargs['instance'].start.date()
-        #     self.fields['start_time'].initial = kwargs['instance'].start.time()
-        # if kwargs['instance'].end:
-        #     self.fields['end_time'].initial = kwargs['instance'].end.time()
+        if 'instance' in kwargs and kwargs['instance'] and hasattr(kwargs['instance'], 'id'):
+            self.fields['occupancy_date'].initial = kwargs['instance'].start.date()
+            self.fields['start_time'].initial = kwargs['instance'].start.time()
+            if kwargs['instance'].end:
+                self.fields['end_time'].initial = kwargs['instance'].end.time()
 
     def clean(self):
         cleaned_data = super().clean()
-        start_time = cleaned_data.get('start')
-        end_time = cleaned_data.get('end')
+        occupancy_date = cleaned_data.get('occupancy_date')
+        start_time = cleaned_data.get('start_time')
+        end_time = cleaned_data.get('end_time')
+        now = datetime.datetime.now()
 
         if start_time:
-            if timezone.now() > start_time:
+            if now.day > occupancy_date.day:
                 raise forms.ValidationError(
                     'Du kannst doch nicht in der Vergangenheit saunieren, Dummkopf :)'
                 )
@@ -57,8 +61,8 @@ class OccupancyForm(forms.ModelForm):
 
     def save(self, commit=True):
         model = super(OccupancyForm, self).save(commit=False)
-        model.start = datetime.combine(self.cleaned_data['occupancy_date'], self.cleaned_data['start_time'])
-        model.end = datetime.combine(self.cleaned_data['occupancy_date'], self.cleaned_data['end_time'])
+        model.start = datetime.datetime.combine(self.cleaned_data['occupancy_date'], self.cleaned_data['start_time'])
+        model.end = datetime.datetime.combine(self.cleaned_data['occupancy_date'], self.cleaned_data['end_time'])
 
         if commit:
             model.save()
