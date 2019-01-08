@@ -5,6 +5,7 @@ from django.contrib.admin import widgets
 from django.utils import timezone
 from django.forms.widgets import TimeInput
 
+from .constants import SONG_CHOICES
 from .models import Occupancy
 
 
@@ -20,11 +21,15 @@ class OccupancyForm(forms.ModelForm):
     occupancy_date = forms.DateField()
     start_time = forms.TimeField()
     end_time = forms.TimeField()
+    song = forms.ChoiceField(
+        label='Dein Saunasong!',
+        choices=SONG_CHOICES,
+    )
 
     class Meta:
         model = Occupancy
         exclude = ['user', 'start', 'end']
-        fields = ['occupancy_date', 'start_time', 'end_time', 'notes']
+        fields = ['occupancy_date', 'start_time', 'end_time', 'song', 'notes']
         widgets = {
             'occupancy_date': forms.DateInput(attrs={'type': 'date'}),
             'start_time': UltraTimeInput(),

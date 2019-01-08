@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.shortcuts import redirect
 
+from .constants import SAUNA_HEATING_TIME
 from .forms import OccupancyForm
 from .models import Occupancy
 
@@ -36,13 +37,13 @@ def index(request):
 @login_required(login_url='/sauna_occupancies/login/')
 def create_occupancy(request):
     if request.method == 'POST':
-        form = OccupancyForm(request.POST)
+        form = OccupancyForm(request.POST, initial={'song': 'False'})
         if form.is_valid():
             occupancy = form.save()
             occupancy.user.add(request.user)
             occupancy.save()
 
-            # Necassary to get the actual path to our CSV File
+            # Necessary to get the actual path to our CSV File
             workpath = os.path.dirname(os.path.abspath(__file__))
             ccron = os.path.join(workpath, 'ccron.csv')
 
@@ -64,11 +65,12 @@ def create_occupancy(request):
             with open(ccron, 'a') as csvFile:
                 writer = csv.writer(csvFile)
                 # [sec],[min],[hour],[day],*,[month],[year],1,[ID],[comment],0,24,1,*
-                minute = occupancy.start.strftime('%M')
-                hour = occupancy.start.strftime('%H')
-                day = occupancy.start.strftime('%d')
-                month = occupancy.start.strftime('%m')
-                year = occupancy.start.strftime('%Y')
+                heating_start = occupancy.start - SAUNA_HEATING_TIME
+                minute = heating_start.strftime('%M')
+                hour = heating_start.strftime('%H')
+                day = heating_start.strftime('%d')
+                month = heating_start.strftime('%m')
+                year = heating_start.strftime('%Y')
                 comment = occupancy.user.all()[0].__str__()
                 writer.writerow([
                     '00',
@@ -86,6 +88,24 @@ def create_occupancy(request):
                     '1',
                     '*'
                 ])
+                song = form.cleaned_data['song']
+                if song != 'False':
+                    writer.writerow([
+                        '00',
+                        minute,
+                        hour,
+                        day,
+                        '*',
+                        month,
+                        year,
+                        '1',
+                        cronjob_id,
+                        'Song - ID {} wiedergeben'.format(song),
+                        '6',
+                        'song',
+                        '0',
+                        '*'
+                    ])
             return redirect(index)
     else:
         form = OccupancyForm()
