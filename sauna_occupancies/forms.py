@@ -44,6 +44,10 @@ class OccupancyForm(forms.ModelForm):
             self.fields['start_time'].initial = kwargs['instance'].start.time()
             if kwargs['instance'].end:
                 self.fields['end_time'].initial = kwargs['instance'].end.time()
+            self.fields['occupancy_date'].widget.attrs['readonly'] = True
+            self.fields['start_time'].widget.attrs['readonly'] = True
+            self.fields['end_time'].widget.attrs['readonly'] = True
+            self.fields['song'].widget.attrs['readonly'] = True
 
     def clean(self):
         cleaned_data = super().clean()
