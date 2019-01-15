@@ -16,24 +16,28 @@ from django.shortcuts import redirect
 from .constants import SAUNA_HEATING_TIME
 from .forms import OccupancyForm
 from .models import Occupancy
+from .view_utils import monthdelta
 
 
 @login_required(login_url='/sauna_occupancies/login/')
-def index(request):
-    now = datetime.datetime.now()
+def occupancy_calendar(request):
     days_of_month = []
+    month_offset = int(request.GET.get('month-offset', 0))
+    now = monthdelta(datetime.datetime.now(), month_offset)
     monthrange = calendar.monthrange(now.year, now.month)
+
     for x in range(monthrange[0]):
         days_of_month.append(('', False))
     for y in range(monthrange[1]):
-        if Occupancy.objects.filter(start__year=now.year, start__month=now.month, start__day=y+1).exists():
+        if Occupancy.objects.filter(start__year=now.year, start__month=now.month, start__day=y + 1).exists():
             days_of_month.append((y + 1, True))
         else:
             days_of_month.append((y + 1, False))
-    return render(request, 'index.html', {'days_of_month': days_of_month,
-                                          'year': now.year,
-                                          'month': calendar.month_name[now.month],
-                                          'month_number': now.month})
+    return render(request, 'occupancy_calendar.html', {'days_of_month': days_of_month,
+                                                       'year': now.year,
+                                                       'month': calendar.month_name[now.month],
+                                                       'month_number': now.month,
+                                                       'month_offset': month_offset})
 
 
 @login_required(login_url='/sauna_occupancies/login/')
@@ -113,7 +117,7 @@ def create_occupancy(request):
                         '0',
                         '*'
                     ])
-            return redirect(index)
+            return redirect(occupancy_calendar)
     else:
         form = OccupancyForm()
         for key in request.GET:

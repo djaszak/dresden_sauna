@@ -5,6 +5,8 @@
 
 <div class="month">
   <ul>
+    <li class="prev"><a class="normal-look" href="{% url 'occupancy_calendar' %}?month-offset={{ month_offset|add:"-1" }}">&#10094;</a></li>
+    <li class="next"><a class="normal-look" href="{% url 'occupancy_calendar' %}?month-offset={{ month_offset|add:"1" }}">&#10095;</a></li>
     <li>
       {{ month }}<br>
       <span style="font-size:18px">{{ year }}</span>
@@ -12,6 +14,7 @@
   </ul>
 </div>
 
+<div class="day-part">
 <ul class="weekdays">
   <li>Mo</li>
   <li>Tu</li>
@@ -33,4 +36,5 @@
     </li>
 {% endfor %}
 </ul>
+</div>
 {% endblock %}
