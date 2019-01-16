@@ -67,6 +67,9 @@ def create_occupancy(request):
                 except IndexError:
                     cronjob_id = 'CJ0'
 
+            # 00,30,18,15,01,*,2019,1,CJ1,Ofen an,0,24,1,*
+            # 00,00,20,15,01,*,2019,1,CJ2,Song-ID 304,6,304,0,*
+
             # Now we will append a new row to the cronjob.csv
             with open(ccron, 'a') as csvFile:
                 writer = csv.writer(csvFile)
@@ -87,13 +90,13 @@ def create_occupancy(request):
                     '00',
                     heating_minute,
                     heating_hour,
-                    '*',
                     heating_day,
                     heating_month,
+                    '*',
                     heating_year,
                     '1',
                     cronjob_id,
-                    comment,
+                    'Ofen an',
                     '0',
                     '24',
                     '1',
@@ -105,12 +108,12 @@ def create_occupancy(request):
                         '00',
                         minute,
                         hour,
-                        '*',
                         day,
                         month,
+                        '*',
                         year,
                         '1',
-                        cronjob_id,
+                        cronjob_id+1,
                         'Song - ID {} wiedergeben'.format(song),
                         '6',
                         song,
